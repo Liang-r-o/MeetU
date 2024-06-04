@@ -1,0 +1,44 @@
+plugins {
+    alias(libs.plugins.androidLibrary)
+}
+
+android {
+    namespace 'com.example.framework'
+    compileSdk rootProject.ext.android["compileSdk"]
+
+    defaultConfig {
+        minSdk rootProject.ext.android["minSdk"]
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        debug{
+            buildConfigField('boolean', 'LOG_DEBUG', 'true')
+            buildConfigField('String','LOG_TAG',"\"Meet\"")
+            buildConfigField('String','SP_NAME',"\"Config\"")
+        }
+
+        release {
+            buildConfigField('boolean', 'LOG_DEBUG', 'true')
+            buildConfigField('String','LOG_TAG',"\"Meet\"")
+            buildConfigField('String','SP_NAME',"\"Config\"")
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation libs.appcompat
+    implementation libs.material
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+}
