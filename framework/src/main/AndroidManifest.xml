@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <application>
+        <activity
+            android:name=".base.BaseUIActivity"
+            android:exported="false" />
+    </application>
+<!--     android:name=".base.BaseUIActivity"-->
+
 </manifest>

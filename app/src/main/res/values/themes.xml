@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.Meet" parent="Base.Theme.Meet" />
+
+    <style name="AppThemeFull" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 </resources>
