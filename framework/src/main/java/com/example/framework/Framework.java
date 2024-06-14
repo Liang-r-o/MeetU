@@ -1,5 +1,10 @@
 package com.example.framework;
 
+import android.content.Context;
+
+import com.example.framework.bomb.BmobManager;
+import com.example.framework.utils.SpUtils;
+
 /**
  * Framework 入口
  */
@@ -10,7 +15,7 @@ public class Framework {
 
     }
 
-    public static Framework getmFramework(){
+    public static Framework getFramework(){
         if (mFramework == null){
             synchronized (Framework.class){
                 if (mFramework == null){
@@ -19,5 +24,10 @@ public class Framework {
             }
         }
         return mFramework;
+    }
+
+    public void initFramework(Context mContext){
+        SpUtils.getInstance().initSp(mContext);
+        BmobManager.getInstance().initBmob(mContext);
     }
 }
