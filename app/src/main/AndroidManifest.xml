@@ -11,7 +11,7 @@
         android:label="遇见"
         android:roundIcon="@mipmap/launch"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Meet"
+        android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <service
@@ -35,8 +35,7 @@
 
         <activity
             android:name=".ui.FirstUploadActivity"
-            android:exported="true"
-            android:theme="@style/AppThemeFull">
+            android:exported="true">
          </activity>
 
         <activity
@@ -64,8 +63,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-        </activity>
+         </activity>
     </application>
 
 </manifest>

@@ -37,7 +37,8 @@ public class FirstUploadActivity extends BaseBackActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(androidx.constraintlayout.widget.R.style.Theme_AppCompat_DayNight_NoActionBar);
+        //setTheme(androidx.constraintlayout.widget.R.style.Theme_AppCompat_DayNight_NoActionBar);
+
         setContentView(R.layout.activity_first_upload);
 
         initView();

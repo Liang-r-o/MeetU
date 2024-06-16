@@ -11,7 +11,8 @@
     <application>
         <activity
             android:name=".base.BaseBackActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
         <activity
             android:name=".base.BaseUIActivity"
             android:exported="false" />

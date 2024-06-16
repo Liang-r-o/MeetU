@@ -3,6 +3,11 @@ package com.example.framework.base;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toolbar;
+
+import androidx.appcompat.app.ActionBar;
+
+import java.util.Objects;
 
 public class BaseBackActivity extends BaseActivity {
 
@@ -10,13 +15,15 @@ public class BaseBackActivity extends BaseActivity {
     @Override
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //显示返回键
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            //清除阴影
+        ActionBar supportActionBar = getSupportActionBar();
+        getActionBar();
+        if (supportActionBar != null){
+            //显示返回键
+             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+           // 清除阴影
             getSupportActionBar().setElevation(0);
         }
+
     }
 
     @Override
