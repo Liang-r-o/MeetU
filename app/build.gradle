@@ -44,5 +44,7 @@ dependencies {
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
     implementation project(path:':framework')
+    implementation libs.swiperefreshlayout
+    implementation 'com.moxun:tagcloudlib:1.2.1'
 
  }
