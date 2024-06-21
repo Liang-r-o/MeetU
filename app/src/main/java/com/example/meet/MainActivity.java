@@ -1,15 +1,9 @@
 package com.example.meet;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,26 +11,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.framework.base.BaseUIActivity;
-import com.example.framework.bomb.BmobManager;
 import com.example.framework.bomb.IMUser;
 import com.example.framework.entry.Constants;
 import com.example.framework.manager.DialogManager;
-import com.example.framework.manager.MediaPlayerManager;
 import com.example.framework.utils.LogUtils;
 import com.example.framework.utils.SpUtils;
-import com.example.framework.utils.TimeUtil;
 import com.example.framework.view.DialogView;
 import com.example.meet.fragment.ChatFragment;
 import com.example.meet.fragment.MeFragment;
@@ -45,11 +28,7 @@ import com.example.meet.fragment.StarFragment;
 import com.example.meet.service.CloudService;
 import com.example.meet.ui.FirstUploadActivity;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
-
-import cn.bmob.v3.BmobUser;
 
 
 public class MainActivity extends BaseUIActivity implements View.OnClickListener{
@@ -170,6 +149,7 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
                 createUploadDialog();
             }
         }
+
 
     }
 

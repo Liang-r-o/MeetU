@@ -59,17 +59,14 @@
         android:textColor="@android:color/white" />
 
 
-
-
-
-<!--    <com.moxun.tagcloudlib.view.TagCloudView-->
-<!--        android:id="@+id/mCloudView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_weight="1"-->
-<!--        app:autoScrollMode="uniform"-->
-<!--        app:radiusPercent="0.8"-->
-<!--        app:scrollSpeed="1" />-->
+    <com.moxun.tagcloudlib.view.TagCloudView
+        android:id="@+id/mCloudView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:autoScrollMode="uniform"
+        app:radiusPercent="0.8"
+        app:scrollSpeed="1" />
 
     <LinearLayout
         android:layout_width="match_parent"
