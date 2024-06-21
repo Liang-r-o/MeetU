@@ -2,7 +2,7 @@ package com.example.framework.bomb;
 
 import cn.bmob.v3.BmobUser;
 
-public class IMUser extends BmobUser {
+public class MUser extends BmobUser {
     //Token属性
 
     //获取Token的头像地址
@@ -124,7 +124,7 @@ public class IMUser extends BmobUser {
 
     @Override
     public String toString() {
-        return "IMUser{" +
+        return "MUser{" +
                 "tokenPhoto='" + tokenPhoto + '\'' +
                 ", tokenNickName='" + tokenNickName + '\'' +
                 ", nickName='" + nickName + '\'' +

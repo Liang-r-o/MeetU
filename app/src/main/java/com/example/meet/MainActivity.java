@@ -1,5 +1,6 @@
 package com.example.meet;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,12 +12,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.framework.base.BaseUIActivity;
-import com.example.framework.bomb.IMUser;
+import com.example.framework.bomb.MUser;
 import com.example.framework.entry.Constants;
+import com.example.framework.java.SimulationData;
 import com.example.framework.manager.DialogManager;
 import com.example.framework.utils.LogUtils;
 import com.example.framework.utils.SpUtils;
@@ -59,6 +62,8 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
     private TextView mTvMe;
     private MeFragment mMeFragment = null;
     private FragmentTransaction mMeTransaction = null;
+
+    DialogView mUploadView;
 
     /**
      * 1.初始化Fragment
@@ -122,12 +127,18 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
 
 //        检查token
         checkToken();
-    }
+
+//        SimulationData.testData();
+     }
 
     /**
      * 检查token
      */
     private void checkToken() {
+
+        if (mUploadView != null) {
+            DialogManager.getInstance().hide(mUploadView);
+        }
 //        获取 token，需要三个参数 1.用户ID，2.头像地址 3.昵称
         String token = SpUtils.getInstance().getString(Constants.SP_TOKEN,"");
         if (!TextUtils.isEmpty(token)){
@@ -135,9 +146,9 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
             startService(new Intent(this, CloudService.class));
         }else{
 
-            IMUser imUser = new IMUser();
-            String tokenPhoto = imUser.getTokenPhoto();
-            String tokenName = imUser.getTokenNickName();
+            MUser mUser = new MUser();
+            String tokenPhoto = mUser.getTokenPhoto();
+            String tokenName = mUser.getTokenNickName();
 //            1 有三个参数
 //            String tokenPhoto = BmobManager.getInstance().getUser().getTokenPhoto();
 //            String tokenName = BmobManager.getInstance().getUser().getTokenNickName();
@@ -160,15 +171,16 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
      * 创建token
      */
     private void createToken() {
-
+        LogUtils.e("createToken");
     }
 
     /**
      * 创建上传提示框
      */
     private void createUploadDialog() {
-        DialogView mUploadView = DialogManager.getInstance().
+        mUploadView = DialogManager.getInstance().
                 initView(this, R.layout.dialog_first_upload);
+
 //        外部点击不能消失
         mUploadView.setCancelable(false);
         ImageView iv_go_upload = mUploadView.findViewById(R.id.iv_go_upload);
@@ -371,5 +383,16 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
                 LogUtils.i("noPermissions:"+noPermissions.toString());
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == Activity.RESULT_OK){
+            if (requestCode == UPLOAD_REQUEST_CODE){
+//                说明上传头像成功
+                checkToken();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

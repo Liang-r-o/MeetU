@@ -1,5 +1,6 @@
 package com.example.framework.base;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -27,7 +28,12 @@ public class BaseActivity extends AppCompatActivity {
 
 //    声明所需权限
     private String[] mStrPermission = {
-            android.Manifest.permission.READ_PHONE_STATE
+            android.Manifest.permission.READ_PHONE_STATE,
+            android.Manifest.permission.CAMERA,
+            android.Manifest.permission.WRITE_SETTINGS,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WAKE_LOCK
     };
 
 //    保存没有同意的权限

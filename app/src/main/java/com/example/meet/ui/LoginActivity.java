@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,7 +16,7 @@ import androidx.annotation.NonNull;
 
 import com.example.framework.base.BaseActivity;
 import com.example.framework.bomb.BmobManager;
-import com.example.framework.bomb.IMUser;
+import com.example.framework.bomb.MUser;
 import com.example.framework.entry.Constants;
 import com.example.framework.manager.DialogManager;
 import com.example.framework.utils.LogUtils;
@@ -27,7 +26,6 @@ import com.example.framework.view.LoadingView;
 import com.example.framework.view.TouchPictureV;
 import com.example.meet.MainActivity;
 import com.example.meet.R;
-import com.example.meet.test.TestActivity;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.LogInListener;
@@ -152,9 +150,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         mLoadingView.show("正在登陆");
 
-        BmobManager.getInstance().signOrLoginByMobilePhone(phone, code, new LogInListener<IMUser>() {
+        BmobManager.getInstance().signOrLoginByMobilePhone(phone, code, new LogInListener<MUser>() {
             @Override
-            public void done(IMUser imUser, BmobException e) {
+            public void done(MUser mUser, BmobException e) {
                 if (e == null){
                     mLoadingView.hide();
 //                    登录成功
