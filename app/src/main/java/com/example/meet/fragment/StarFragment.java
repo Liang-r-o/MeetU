@@ -12,15 +12,12 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.example.framework.base.BaseFragment;
+import com.example.framework.utils.LogUtils;
 import com.example.meet.R;
 import com.example.meet.ui.AddFriendActivity;
 import com.moxun.tagcloudlib.view.TagCloudView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link StarFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class StarFragment extends BaseFragment implements View.OnClickListener {
 
 
@@ -64,6 +61,7 @@ public class StarFragment extends BaseFragment implements View.OnClickListener {
 //            扫描
         }else if(id == R.id.iv_add){
 //            添加好友
+            LogUtils.i("id:"+R.id.iv_add);
             startActivity(new Intent(getActivity(), AddFriendActivity.class));
         }else if(id == R.id.ll_random){
 //          随机匹配
@@ -92,5 +90,7 @@ public class StarFragment extends BaseFragment implements View.OnClickListener {
         mTvFate = view.findViewById(R.id.tv_fate);
         mLlLove = view.findViewById(R.id.ll_love);
         mTvLove = view.findViewById(R.id.tv_love);
+
+        mIvAdd.setOnClickListener(this);
     }
 }

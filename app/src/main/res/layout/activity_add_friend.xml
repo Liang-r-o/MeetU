@@ -21,6 +21,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
             android:layout_marginLeft="10dp"
             android:text="@string/text_add_friend_contact"
             android:textColor="@android:color/white" />
@@ -55,6 +56,7 @@
 
     </LinearLayout>
 
+<!--    以下两个只能出现一个，有数据第一个，无数据第二个-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mSearchResultView"
         android:layout_width="match_parent"

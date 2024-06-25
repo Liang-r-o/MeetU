@@ -4,6 +4,7 @@ import android.content.Context;
 import android.webkit.WebView;
 
 import java.io.File;
+import java.util.List;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
@@ -85,8 +86,7 @@ public class BmobManager {
         BmobUser.signOrLoginByMobilePhone(phone,code,listener);
     }
 
-
-//    上传头像
+ //    上传头像
     public void uploadFirstPhoto(String nickName, File file,OnUploadPhotoListener listener){
         /**
          * 1 上传文件拿到地址
@@ -95,6 +95,13 @@ public class BmobManager {
          */
         final MUser user = getUser();
         final BmobFile bmobFile = new BmobFile(file);
+
+//        queryPhoneUser("18979932702", new FindListener<MUser>() {
+//            @Override
+//            public void done(List<MUser> list, BmobException e) {
+//                user = list.get(0);
+//            }
+//        });
 
         bmobFile.uploadblock(new UploadFileListener() {
             @Override
@@ -139,8 +146,15 @@ public class BmobManager {
      */
     public void queryPhoneUser(String phone, FindListener listener){
         baseQuery("mobilePhoneNumber",phone,listener);
+    }
 
-
+    /**
+     * 查询所有用户
+     * @param
+     */
+    public void queryAllUser( FindListener<MUser> listener){
+        BmobQuery<MUser> query = new BmobQuery<>();
+        query.findObjects(listener);
     }
 
     /**
@@ -149,7 +163,7 @@ public class BmobManager {
      * @param values
      * @param listener
      */
-    public void baseQuery(String key,String values, FindListener listener){
+    public void baseQuery(String key,String values, FindListener<MUser> listener){
         BmobQuery<MUser> query = new BmobQuery<>();
         query.addWhereEqualTo(key,values);
         query.findObjects(listener);

@@ -33,7 +33,8 @@ public class BaseActivity extends AppCompatActivity {
             android.Manifest.permission.WRITE_SETTINGS,
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
-            android.Manifest.permission.WAKE_LOCK
+            android.Manifest.permission.WAKE_LOCK,
+            android.Manifest.permission.READ_CONTACTS
     };
 
 //    保存没有同意的权限

@@ -2,7 +2,7 @@ package com.moxun.tagcloudlib.view;
 
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.support.annotation.NonNull;
+//import android.support.annotation.NonNull;
 import android.view.View;
 import com.moxun.tagcloudlib.view.graphics.Point3DF;
 
@@ -150,7 +150,7 @@ public class Tag implements Comparable<Tag>{
     }
 
     @Override
-    public int compareTo(@NonNull Tag another) {
+    public int compareTo(Tag another) {
         return this.getScale() > another.getScale() ? 1 : -1;
     }
 }

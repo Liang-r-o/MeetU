@@ -104,7 +104,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private void sendMSM() {
         //1获取手机号
         String phone = mEtPhone.getText().toString().trim();
-        LogUtils.i(phone);
+//        LogUtils.i(phone);
         if (TextUtils.isEmpty(phone)){
             Toast.makeText(this, getString(R.string.text_login_phone_null), Toast.LENGTH_SHORT).show();
             return;
@@ -115,6 +115,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             public void done(Integer integer, BmobException e) {
                 if (e == null){
                     mBtnSendCode.setEnabled(false);
+                    // todo
                     mHandler.sendEmptyMessage(H_TIME);
                     Toast.makeText(LoginActivity.this, "短信验证码发送成功",
                             Toast.LENGTH_SHORT).show();
@@ -139,6 +140,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
 
         String code = mEtCode.getText().toString().trim();
+        // todo
         if (TextUtils.isEmpty(code)){
             Toast.makeText(this, getString(R.string.text_login_code_null), Toast.LENGTH_SHORT).show();
             return;
@@ -165,6 +167,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 }
             }
         });
+
+//                    登录成功
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//                    把手机号码保存下来，用户下次登录可以不用重新输入
+        SpUtils.getInstance().putString(Constants.SP_PHONE,phone);
+        finish();
     }
 
     private void initView() {

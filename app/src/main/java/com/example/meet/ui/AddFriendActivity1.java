@@ -22,20 +22,16 @@ import com.example.framework.utils.CommonUtils;
 import com.example.framework.utils.LogUtils;
 import com.example.meet.R;
 import com.example.meet.adapter.AddFriendAdapter;
-import com.example.meet.adapter.CommonAdapter;
-import com.example.meet.adapter.CommonViewHolder;
 import com.example.meet.model.AddFriendModle;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
-public class AddFriendActivity extends BaseBackActivity implements View.OnClickListener {
-    public static final int TYPE_TITLE = 0;
-    public static final int TYPE_CONTENT = 1;
+public class AddFriendActivity1 extends BaseBackActivity implements View.OnClickListener {
+
     /**
      * 1.模拟用户数据
      * 2.根据条件
@@ -49,7 +45,7 @@ public class AddFriendActivity extends BaseBackActivity implements View.OnClickL
 
     private View include_empty_view;
 
-    private CommonAdapter<AddFriendModle> mAddFriendAdapter;
+    private AddFriendAdapter mAddFriendAdapter;
 
     private List<AddFriendModle> mList = new ArrayList<>();
     @Override
@@ -80,44 +76,15 @@ public class AddFriendActivity extends BaseBackActivity implements View.OnClickL
         mMSearchResultView.setLayoutManager(new LinearLayoutManager(this));
         mMSearchResultView.addItemDecoration(new DividerItemDecoration
                 (this,DividerItemDecoration.VERTICAL));
-//        mAddFriendAdapter = new AddFriendAdapter(this,mList);
-        mAddFriendAdapter = new CommonAdapter<>(mList, new CommonAdapter.OnMoreBingDataListener<AddFriendModle>() {
-            @Override
-            public int getItemType(int position) {
-                return mList.get(position).getType();
-            }
-
-            @Override
-            public void onBindViewHolder(AddFriendModle model, CommonViewHolder viewHolder, int type, int position) {
-                if (type == TYPE_TITLE){
-                     viewHolder.setText(R.id.tv_title,model.getTitle());
-
-                } else if (type == TYPE_CONTENT) {
-                    LogUtils.i("model:"+model);
-                    viewHolder.setImageUrl(AddFriendActivity.this,R.id.iv_photo,model.getPhoto());
-                    viewHolder.setImageResource(R.id.iv_sex,model.isSex() ? R.drawable.img_boy_icon : R.drawable.img_girl_icon);
-                    viewHolder.setText(R.id.tv_nickname,model.getNickName());
-                    viewHolder.setText(R.id.tv_age,model.getAge() + getString((R.string.text_search_age)));
-                    viewHolder.setText(R.id.tv_desc,model.getDesc());
-
-                }
-            }
-
-            @Override
-            public int getLayoutId(int type) {
-                if (type == TYPE_TITLE){
-                    return R.layout.layout_search_title_item;
-
-                }else if (type == TYPE_CONTENT){
-                    return R.layout.layout_search_user_item;
-                }
-                return 0;
-            }
-        });
-
-
+        mAddFriendAdapter = new AddFriendAdapter(this,mList);
         mMSearchResultView.setAdapter(mAddFriendAdapter);
 
+        mAddFriendAdapter.setOnClickListener(new AddFriendAdapter.OnClickListener() {
+            @Override
+            public void onClick(int positioin) {
+                Toast.makeText(AddFriendActivity1.this,"positioin"+positioin,Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -126,10 +93,10 @@ public class AddFriendActivity extends BaseBackActivity implements View.OnClickL
 //跳转到通讯录
         if (id == R.id.ll_to_contact){
 //  处理权限 为什么还要判断呢，用户在第一次同意该权限后，在跳转到通讯录之前又不小心把它关了，所以在跳转之前再次检查一遍权限
-            if (checkPermissions(android.Manifest.permission.READ_CONTACTS)){
+            if (checkPermissions(Manifest.permission.READ_CONTACTS)){
                 startActivity(new Intent(this,ContactFriendActivity.class));
             }else {
-                requestPermission(new String[]{android.Manifest.permission.READ_CONTACTS},1001);
+                requestPermission(new String[]{Manifest.permission.READ_CONTACTS},1001);
             }
 
         }else if (id == R.id.iv_search){
@@ -199,6 +166,7 @@ public class AddFriendActivity extends BaseBackActivity implements View.OnClickL
                             addContent(list.get(i));
                         }
                         mAddFriendAdapter.notifyDataSetChanged();
+
                     }
                 }
             }
@@ -215,6 +183,7 @@ public class AddFriendActivity extends BaseBackActivity implements View.OnClickL
         modle.setType(AddFriendAdapter.TYPE_TITLE);
         modle.setTitle(title);
         mList.add(modle);
+
     }
 
     /**
@@ -232,5 +201,9 @@ public class AddFriendActivity extends BaseBackActivity implements View.OnClickL
         modle.setNickName(mUser.getNickName());
         modle.setDesc(mUser.getDesc());
         mList.add(modle);
+
+
      }
+
+
 }

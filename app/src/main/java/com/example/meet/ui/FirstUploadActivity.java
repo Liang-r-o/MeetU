@@ -181,7 +181,7 @@ public class FirstUploadActivity extends BaseBackActivity implements View.OnClic
     private File uploadFile = null;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        LogUtils.i("requestCode:" +resultCode);
+//        LogUtils.i("requestCode:" +resultCode);
         if (resultCode == Activity.RESULT_OK){
             if (requestCode == FileHelper.CAMERA_REQUEST_CODE){
                 uploadFile = FileHelper.getInstance().getTempFile();

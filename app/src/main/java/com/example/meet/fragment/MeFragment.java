@@ -1,66 +1,94 @@
 package com.example.meet.fragment;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
+import com.example.framework.bomb.BmobManager;
+import com.example.framework.bomb.MUser;
+import com.example.framework.helper.GlideHelper;
 import com.example.meet.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class MeFragment extends Fragment {
+import java.util.List;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+import de.hdodenhof.circleimageview.CircleImageView;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class MeFragment extends Fragment implements View.OnClickListener{
 
-    public MeFragment() {
-        // Required empty public constructor
-    }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MeFragment newInstance(String param1, String param2) {
-        MeFragment fragment = new MeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private CircleImageView mIvMePhoto;
+    private TextView mTvNickname;
+    private TextView mTvServerStatus;
+    private LinearLayout mLlMeInfo;
+    private LinearLayout mLlNewFriend;
+    private LinearLayout mLlPrivateSet;
+    private LinearLayout mLlShare;
+    private LinearLayout mLlNotice;
+    private LinearLayout mLlSetting;
+
+    private View view;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_me, container, false);
+        view = inflater.inflate(R.layout.fragment_me, container, false);
+        initView();
+        return view;
+    }
+
+    private void initView() {
+        mIvMePhoto = (CircleImageView) view.findViewById(R.id.iv_me_photo);
+        mTvNickname = (TextView) view.findViewById(R.id.tv_nickname);
+        mTvServerStatus = (TextView) view.findViewById(R.id.tv_server_status);
+        mLlMeInfo = (LinearLayout) view.findViewById(R.id.ll_me_info);
+        mLlNewFriend = (LinearLayout) view.findViewById(R.id.ll_new_friend);
+        mLlPrivateSet = (LinearLayout) view.findViewById(R.id.ll_private_set);
+        mLlShare = (LinearLayout) view.findViewById(R.id.ll_share);
+        mLlNotice = (LinearLayout) view.findViewById(R.id.ll_notice);
+        mLlSetting = view.findViewById(R.id.ll_setting);
+
+        mLlMeInfo.setOnClickListener(this);
+        mLlNewFriend.setOnClickListener(this);
+        mLlPrivateSet.setOnClickListener(this);
+        mLlShare.setOnClickListener(this);
+        mLlSetting.setOnClickListener(this);
+
+        loadMeInfo();
+    }
+
+    /**
+     * 加载个人信息
+     */
+    private void loadMeInfo() {
+        final MUser[] mUser = new MUser[1];
+        BmobManager.getInstance().queryPhoneUser("17939603000", new FindListener<MUser>() {
+            @Override
+//            异步 打日志验证 耗时操作一般异步
+            public void done(List<MUser> list, BmobException e) {
+                mUser[0] = list.get(0);
+                GlideHelper.loadUrl(getActivity(), mUser[0].getPhoto(),mIvMePhoto);
+                mTvNickname.setText(mUser[0].getNickName());
+            }
+        });
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
     }
 }
