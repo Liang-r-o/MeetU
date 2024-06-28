@@ -1,5 +1,7 @@
 package com.example.meet;
 
+import static cn.bmob.v3.util.BmobContentProvider.getUser;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,10 +19,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.framework.base.BaseUIActivity;
+import com.example.framework.bomb.BmobManager;
 import com.example.framework.bomb.MUser;
 import com.example.framework.entry.Constants;
+import com.example.framework.gson.TokenBean;
 import com.example.framework.java.SimulationData;
 import com.example.framework.manager.DialogManager;
+import com.example.framework.manager.HttpManager;
 import com.example.framework.utils.LogUtils;
 import com.example.framework.utils.SpUtils;
 import com.example.framework.view.DialogView;
@@ -30,13 +35,27 @@ import com.example.meet.fragment.SquareFragment;
 import com.example.meet.fragment.StarFragment;
 import com.example.meet.service.CloudService;
 import com.example.meet.ui.FirstUploadActivity;
+import com.google.gson.Gson;
 
+import java.util.HashMap;
 import java.util.List;
 
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
-public class MainActivity extends BaseUIActivity implements View.OnClickListener{
+
+public class MainActivity extends BaseUIActivity implements View.OnClickListener {
 
 
+    private Disposable disposable;
     private static final int PERMISSION_REQUEST_CODE = 1001;
     private LinearLayout mLlStar;
     private ImageView mIvStar;
@@ -63,22 +82,27 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
     private MeFragment mMeFragment = null;
     private FragmentTransaction mMeTransaction = null;
 
+    public static MUser mUser;
+
     DialogView mUploadView;
+
+
 
     /**
      * 1.初始化Fragment
      * 2.显示Fragment
      * 3.隐藏所有的Fragment
      * 4.恢复Fragment
-     *
+     * <p>
      * 优化的手段
-     * @param savedInstanceState If the activity is being re-initialized after
-     *     previously being shut down then this Bundle contains the data it most
-     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
      *
+     * @param savedInstanceState If the activity is being re-initialized after
+     * previously being shut down then this Bundle contains the data it most
+     * recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
      */
 //    跳转上传头像的回调code
     public static final int UPLOAD_REQUEST_CODE = 1002;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,11 +113,32 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
 
     }
 
+    public static MUser getMuser(){
+        return mUser;
+    }
+
     /**
      * 初始化View
      */
 
     private void initView() {
+
+        mUser = new MUser();
+
+        //17939603000
+//        mUser.setObjectId("37ea59cb9c");
+//        mUser.setTokenPhoto("http://img5.duitang.com/uploads/item/201408/14/20140814165959_VCtan.thumb.700_0.png");
+//        mUser.setTokenNickName("努力吧");
+
+        //        17946606411
+//        mUser.setObjectId("c18e38a8cf");
+//        mUser.setTokenPhoto("http://pic2.zhimg.com/v2-e7807853bb7b3d49f883fe367413328d_b.jpg");
+//        mUser.setTokenNickName("触碰岁月");
+
+////        17934603000
+            mUser.setObjectId("a1d8a72b60");
+            mUser.setTokenPhoto("http://img.52z.com/upload/news/image/20180423/20180423052858_22336.jpg");
+            mUser.setTokenNickName("安守");
         requestPermiss();
 
         mLlStar = findViewById(R.id.ll_star);
@@ -122,6 +167,7 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
 
         initFragment();
 
+
 //        切换默认的选项卡
         checkMainTab(0);
 
@@ -129,33 +175,35 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
         checkToken();
 
 //        SimulationData.testData();
-     }
+    }
+
 
     /**
      * 检查token
      */
     private void checkToken() {
 
+
+
         if (mUploadView != null) {
             DialogManager.getInstance().hide(mUploadView);
         }
 //        获取 token，需要三个参数 1.用户ID，2.头像地址 3.昵称
-        String token = SpUtils.getInstance().getString(Constants.SP_TOKEN,"");
-        if (!TextUtils.isEmpty(token)){
+        String token = SpUtils.getInstance().getString(Constants.SP_TOKEN, "");
+        if (!TextUtils.isEmpty(token)) {
 //       启动云服务连接融云服务
-            startService(new Intent(this, CloudService.class));
-        }else{
+            startCloudService();
+        } else {
 
-            MUser mUser = new MUser();
             String tokenPhoto = mUser.getTokenPhoto();
             String tokenName = mUser.getTokenNickName();
 //            1 有三个参数
 //            String tokenPhoto = BmobManager.getInstance().getUser().getTokenPhoto();
 //            String tokenName = BmobManager.getInstance().getUser().getTokenNickName();
-            if (!TextUtils.isEmpty(tokenPhoto) && !TextUtils.isEmpty(tokenName)){
+            if (!TextUtils.isEmpty(tokenPhoto) && !TextUtils.isEmpty(tokenName)) {
 //                创建token
                 createToken();
-            }else {
+            } else {
 //                创建上传提示框
                 createUploadDialog();
             }
@@ -165,15 +213,63 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
     }
 
 
-
-
     /**
      * 创建token
      */
     private void createToken() {
-        LogUtils.e("createToken");
+
+
+        /**
+         * 1去融云后台获取token
+         * 2连接融云
+         */
+        HashMap<String, String> map = new HashMap<>();
+        map.put("userId", mUser.getObjectId());
+        map.put("name", mUser.getTokenNickName());
+        map.put("portraitUri", mUser.getTokenPhoto());
+
+//                    通过Http去请求Token 异步操作
+        disposable = Observable.create(new ObservableOnSubscribe<String>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<String> emitter) throws Exception {
+//                            执行请求过程
+                        String json = HttpManager.getInstance().postCloudToken(map);
+                        emitter.onNext(json);
+                        emitter.onComplete();
+                    }
+
+//                        线程调度
+                }).subscribeOn(Schedulers.newThread()).subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+//                        解析token
+                        parisingCloudToken(s);
+                    }
+                });
+
     }
 
+
+    /**
+     * 解析Token
+     * @param s
+     */
+    private void parisingCloudToken(String s) {
+        TokenBean tokenBean = new Gson().fromJson(s, TokenBean.class);
+        if (tokenBean.getCode() == 200){
+            if (!TextUtils.isEmpty(tokenBean.getToken())){
+                SpUtils.getInstance().putString(Constants.SP_TOKEN,tokenBean.getToken());
+                startCloudService();
+            }
+        }
+    }
+
+
+    private void startCloudService(){
+        LogUtils.i("startCloudService");
+        startService(new Intent(this, CloudService.class));
+    }
     /**
      * 创建上传提示框
      */
@@ -394,5 +490,13 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (disposable.isDisposed()){
+            disposable.dispose();
+        }
     }
 }

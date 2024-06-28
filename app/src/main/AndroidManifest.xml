@@ -16,6 +16,15 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.NewFriendActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.UserInfoActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.ContactFriendActivity"
             android:exported="false" />
         <activity
@@ -64,7 +73,7 @@
         <activity
             android:name=".ui.IndexActivity"
             android:exported="true"
-            android:theme="@style/AppThemeFull"></activity> <!-- 主页 -->
+            android:theme="@style/AppThemeFull" /> <!-- 主页 -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -74,7 +83,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity> <!-- 离线消息 -->
+        <receiver
+            android:name=".receiver.SealNotificationReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="io.rong.push.intent.MESSAGE_ARRIVED" />
+                <action android:name="io.rong.push.intent.MESSAGE_CLICKED" />
+                <action android:name="io.rong.push.intent.THIRD_PARTY_PUSH_STATE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

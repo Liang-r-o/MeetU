@@ -57,8 +57,6 @@ public class AddFriendActivity extends BaseBackActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_friend);
-
-
         initView();
     }
 
@@ -93,12 +91,20 @@ public class AddFriendActivity extends BaseBackActivity implements View.OnClickL
                      viewHolder.setText(R.id.tv_title,model.getTitle());
 
                 } else if (type == TYPE_CONTENT) {
-                    LogUtils.i("model:"+model);
+//                    LogUtils.i("model:"+model);
                     viewHolder.setImageUrl(AddFriendActivity.this,R.id.iv_photo,model.getPhoto());
                     viewHolder.setImageResource(R.id.iv_sex,model.isSex() ? R.drawable.img_boy_icon : R.drawable.img_girl_icon);
                     viewHolder.setText(R.id.tv_nickname,model.getNickName());
                     viewHolder.setText(R.id.tv_age,model.getAge() + getString((R.string.text_search_age)));
                     viewHolder.setText(R.id.tv_desc,model.getDesc());
+
+
+                    viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            UserInfoActivity.startActivity(AddFriendActivity.this,model.getUserId());
+                        }
+                    });
 
                 }
             }
@@ -160,7 +166,7 @@ public class AddFriendActivity extends BaseBackActivity implements View.OnClickL
                 }
                 if (CommonUtils.isEmpty(list)){
                     MUser mUser = list.get(0);
-                    LogUtils.i("muser:"+mUser.toString());
+                    LogUtils.i("查找的muser:"+mUser.toString());
                     include_empty_view.setVisibility(View.GONE);
                     mMSearchResultView.setVisibility(View.VISIBLE);
 //                    每次你查询有数据则清空
@@ -168,7 +174,7 @@ public class AddFriendActivity extends BaseBackActivity implements View.OnClickL
 
                     addTitle("查询结果");
                     addContent(mUser);
-                    mAddFriendAdapter.notifyDataSetChanged();
+//                    mAddFriendAdapter.notifyDataSetChanged();
 
 //                    推荐
                     pushUser();

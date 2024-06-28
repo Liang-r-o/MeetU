@@ -9,6 +9,5 @@ plugins {
 }
 
 
-
 //引入自定义Gradle配置文件
 apply from:"config.gradle"

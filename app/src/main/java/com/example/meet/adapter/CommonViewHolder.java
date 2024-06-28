@@ -91,4 +91,16 @@ public class CommonViewHolder extends RecyclerView.ViewHolder {
         iv.setImageResource(resId);
         return this;
     }
+
+    /***
+     * 设置背景颜色
+     * @param viewId
+     * @param color
+     * @return
+     */
+    public CommonViewHolder setBackgroundColor( int viewId,int color){
+        ImageView iv = getView(viewId);
+        iv.setBackgroundColor(color);
+        return this;
+    }
 }

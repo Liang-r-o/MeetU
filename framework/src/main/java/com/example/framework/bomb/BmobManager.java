@@ -3,6 +3,8 @@ package com.example.framework.bomb;
 import android.content.Context;
 import android.webkit.WebView;
 
+import com.example.framework.utils.CommonUtils;
+
 import java.io.File;
 import java.util.List;
 
@@ -15,6 +17,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.LogInListener;
 import cn.bmob.v3.listener.QueryListener;
+import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
@@ -134,11 +137,51 @@ public class BmobManager {
 
     }
 
+
+    // todo 接下来两个方法的第一个参数是我写死的用户，
+    /**
+     * 添加好友
+     */
+    public void addFriend(MUser mMuser,MUser mUser, SaveListener<String> listener) {
+        Friend friend = new Friend();
+        friend.setUser(mMuser);
+        friend.setFriendUser(mUser);
+        friend.save(listener);
+    }
+
+    /**
+     *  通过Id添加好友
+     */
+    public void addFriend(MUser mMuser,String id, SaveListener<String> listener) {
+        queryObjectIdUser(id, new FindListener<MUser>() {
+            @Override
+            public void done(List<MUser> list, BmobException e) {
+                if (e == null){
+                    if (CommonUtils.isEmpty(list)){
+                        MUser mUser = list.get(0);
+                        addFriend(mMuser,mUser,listener);
+                    }
+                }
+            }
+        });
+    }
+
+
     public interface OnUploadPhotoListener{
         void OnUpdateDone();
         void OnUpdateFail(BmobException e);
     }
 
+
+    /**
+     * 根据objectId查询用户
+     * @param userId
+     * @param listener
+     */
+    public void queryObjectIdUser(String objectId, FindListener<MUser> listener) {
+        baseQuery("objectId",objectId,listener);
+
+    }
 
     /**
      * 根据电话号码查询用户
@@ -149,11 +192,21 @@ public class BmobManager {
     }
 
     /**
+     * 查询我的好友
+     * @param listener
+     */
+    public void queryMyFriend(FindListener<Friend> listener){
+        BmobQuery<Friend> query = new BmobQuery<>();
+        query.addWhereEqualTo("user",getUser());
+        query.findObjects(listener);
+    }
+    /**
      * 查询所有用户
      * @param
      */
     public void queryAllUser( FindListener<MUser> listener){
         BmobQuery<MUser> query = new BmobQuery<>();
+
         query.findObjects(listener);
     }
 
